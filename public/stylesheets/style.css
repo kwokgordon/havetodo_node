@@ -1,0 +1,79 @@
+/*
+Theme Color
+background: #0FAABB;
+text: #FFAA00;
+*/
+
+/* Universal */
+
+.center {
+	text-align: center;
+}
+
+/* Header */
+
+#logo {
+	float: left;
+	margin-right: 10px;
+	font-size: 1.7em;
+	color: white;
+	text-transform: uppercase;
+	letter-spacing: -1px;
+	padding-top: 10px;
+	font-weight: bold;
+	line-height: 1;
+/*
+	text-shadow: 
+		-1px -1px 0 #000,
+		1px -1px 0 #000,
+		-1px 1px 0 #000,
+		1px 1px 0 #000;  
+*/
+}
+
+/*
+.container-fluid {
+	background-color: #0FAABB;
+}
+*/
+
+.nav > li > a {
+	padding: 10px 15px 10px;
+/*
+	color: white;
+	text-shadow: 
+		-1px -1px 0 #000,
+		1px -1px 0 #000,
+		-1px 1px 0 #000,
+		1px 1px 0 #000;
+*/
+}
+
+
+/* Footer */
+
+footer {
+	margin-top: 45px;
+	padding-top: 5px;
+	border-top: 1px solid $grayMediumLight;
+	color: $grayLight;
+}
+
+footer a {
+	color: $gray;
+}
+
+footer small {
+	float: left;
+}
+
+footer ul {
+	float: right;
+	list-style: none;
+	font-size: 13px;
+}
+
+footer ul li {
+	float: left;
+	margin-left: 10px;
+}

@@ -1,0 +1,9 @@
+{
+	"development": {
+		"url": "mongodb://localhost:27017/havetodo"
+	},
+	
+	"production": {
+		"url": ""
+	}
+}
