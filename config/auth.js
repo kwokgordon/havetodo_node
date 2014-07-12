@@ -1,8 +1,12 @@
+var path = require('path');
+var configSecret = require(path.join(__basedir, 'config/secret.js'));
+
 module.exports = {
 	
 	'facebookAuth' : {
-		'clientID': '1434737156775562',
-		'clientSecret': 'e05a95cc866fc770c80718e5d1aab757',
-		'callbackURL': 'http://184.64.50.5:3000/auth/facebook/callback'
+		'clientID': configSecret.facebookAuth.clientID,
+		'clientSecret': configSecret.facebookAuth.clientSecret,
+		'callbackURL': configSecret.facebookAuth.callbackURL
 	}
+	
 };
