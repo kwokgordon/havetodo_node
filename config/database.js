@@ -5,17 +5,17 @@ module.exports = function(env){
 	switch(env){
 		case 'development':
 			return {
-				"url": "mongodb://localhost:27017/ikimasuapp",
+				"url": "mongodb://localhost:27017/havetodo",
 				"host":"localhost",
 				"port":27017,
-				"database":"ikimasuapp"
+				"database":"havetodo"
 			};
 		case 'production':
 			return {
-				"url": "mongodb://localhost:27017/ikimasuapp",
+				"url": "mongodb://localhost:27017/havetodo",
 				"host":"localhost",
 				"port":27017,
-				"database":"ikimasuapp"
+				"database":"havetodo"
 			};
 		default:
 			return {

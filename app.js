@@ -66,21 +66,16 @@ MongoClient.connect(configDB.url, function(err, db) {
 	var MainRoutes = require(path.join(__basedir, 'controllers/main'));
 	var main_routes = new MainRoutes(app, db, passport);
 
-//	var RestaurantRoutes = require(path.join(__basedir, 'controllers/restaurant'));
-//	var restaurant_routes = new RestaurantRoutes(app, db, passport);
-	
-	/////////////////////////////////////////////////////////////////////////////
+	var TaskRoutes = require(path.join(__basedir, 'controllers/task'));
+	var task_routes = new TaskRoutes(app, db, passport);
 
-	//////////////////////////////////////////////////////////////////////////////
-	// Routes
-//	var main_routes = require(path.join(__basedir, 'controllers/main'));
-//	var task_routes = require(path.join(__basedir, 'controllers/task'));
-//	var api_routes = require(path.join(__basedir, 'controllers/api'));
-	
-//	app.use('/', main_routes);
-//	app.use('/users', task_routes);
-//	app.use('/api', api_routes);
-	
+	var APIRoutes = require(path.join(__basedir, 'controllers/api'));
+	var api_routes = new APIRoutes(app, db, passport);
+
+	app.use('/', main_routes);
+	app.use('/users', task_routes);
+	app.use('/api', api_routes);
+
 	/////////////////////////////////////////////////////////////////////////////
 
 	/// catch 404 and forward to error handler

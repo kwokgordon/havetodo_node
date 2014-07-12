@@ -1,0 +1,40 @@
+{% extends '../layout/layout.html' %}
+
+{% block head %}
+	<script src="/javascripts/user.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container" ng-controller="UserController">
+	<div class="container">
+		<ul class="alert alert-danger" ng-if="error">
+			<li ng-repeat="m in error">[[ m ]]</li>
+		</ul>
+		<ul class="alert alert-success" ng-if="message">
+			<li ng-repeat="m in message">[[ m ]]</li>
+		</ul>
+	</div>
+
+	<div class="container">
+		<h1><span class="fa fa-sign-in"></span> Login</h1>
+		
+		<form action="/login" method="post">
+			<div class="form-group">
+				<label>Email</label>
+				<input type="text" class="form-control" name="email" ng-model="formData.email" autofocus>
+			</div>
+			<div class="form-group">
+				<label>Password</label>
+				<input type="password" class="form-control" name="password" ng-model="formData.password">
+			</div>
+			
+			<button type="submit" class="btn btn-default" ng-click="login()">Login</button>
+		</form>
+		
+		<hr>
+		
+		<p>Need an account? <a href="/signup">Signup</a></p>
+		<p>Or go <a href="/">home</a>.</p>
+	</div>
+</div>
+{% endblock %}

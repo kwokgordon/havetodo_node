@@ -1,5 +1,3 @@
-var havetodoApp = angular.module('havetodoApp',[]);
-
 havetodoApp.controller('TasksController', function ($scope, $http) {
 
 	$scope.formData = {};
@@ -28,7 +26,7 @@ havetodoApp.controller('TasksController', function ($scope, $http) {
 		if($scope.formData.name == undefined || $scope.formData.name.trim() == "")
 			return;
 		
-		$('#CreateTasklistModal').modal('hide')
+		$('#CreateTasklistModal').modal('hide');
 		
 		$http.post('/api/users/tasklists', $scope.formData)
 			.success(function(data) {
