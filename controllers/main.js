@@ -7,7 +7,7 @@ module.exports = function MainRoutes(app, db, passport) {
 		res.render('users/signup', { error: req.flash('signupError') });
 	});
 	
-	app.post('/signup', passport.authenticate('local-signup-owner', {
+	app.post('/signup', passport.authenticate('local-signup', {
 		successRedirect: '/users/profile',
 		failureRedirect: '/signup',
 		failureFlash: true
@@ -17,13 +17,13 @@ module.exports = function MainRoutes(app, db, passport) {
 		res.render('users/login', { error: req.flash('loginError') });
 	});
 	
-	app.post('/login', passport.authenticate('local-login-owner', {
+	app.post('/login', passport.authenticate('local-login', {
 		successRedirect: '/users/profile',
 		failureRedirect: '/login',
 		failureFlash: true
 	}));
 	
-	app.get('/users/profile', isLoggedInOwner, function(req, res) {
+	app.get('/users/profile', isLoggedIn, function(req, res) {
 		res.render('users/profile', { message: req.flash('signup_login_Message') });
 	});
 
@@ -31,13 +31,6 @@ module.exports = function MainRoutes(app, db, passport) {
 		req.logout();
 		res.redirect('/');
 	});
-
-	function isLoggedInOwner(req, res, next) {
-		if (req.user && req.user.role == "owner")
-			return next();
-
-		res.redirect('/login');
-	}
 
 	function isLoggedIn(req, res, next) {
 		if (req.user)

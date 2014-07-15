@@ -1,15 +1,16 @@
-<% include ../layout/header %>
+{% extends '../layout/tasklist_layout.html' %}
 
-<link rel="stylesheet" href="/stylesheets/tasks.css">
-<script src="/javascripts/tasks.js"></script>
-
-<div ng-app="havetodoApp">
-
-<div class="container" ng-controller="TasksController">
-
-<% include ../tasklists/tasklist %>
-
+{% block content %}
+<div class="container">
+	<ul class="alert alert-danger" ng-if="error">
+		<li ng-repeat="m in error">[[ m ]]</li>
+	</ul>
+	<ul class="alert alert-success" ng-if="message">
+		<li ng-repeat="m in message">[[ m ]]</li>
+	</ul>
+	
 	<div class="taskarea">
+		<h3>[[taskTitle]]</h3>
 		<div id="task-form" class="row text-center">
 			<form name="AddTaskForm">
 				<div class="field">
@@ -19,15 +20,15 @@
 				</div>
 			</form>
 		</div>
-
+	
 		<div class="panel panel-default">
 		  <div class="panel-heading">
-		  	Tasks <span class="label label-info">{{tasks.length}}</span>
+		  	Tasks <span class="label label-info">[[tasks.length]]</span>
 		  </div>
 		  <div>
 		
 			  <table class="table">
-		      <tr ng-repeat="task in tasks" class="task-completed-{{task.completed}}">
+		      <tr ng-repeat="task in tasks" class="task-completed-[[task.completed]]">
 		      	<td width="5%">
 		      		<div ng-if="task.completed">
 			      	  <img src="/images/check.png" height="50px" width="50px" ng-click="toggleComplete(task._id)">
@@ -37,7 +38,7 @@
 			      	</div>
 		      	</td>
 		        <td width="90%">
-		        	{{task.name}}	
+		        	[[task.name]]	
 			    	</td>
 		        <td width="5%">
 		        	<span class="icon-trash" ng-click="deleteTask(task._id)">Delete</span>
@@ -48,5 +49,4 @@
 		</div>
 	</div>
 </div>
-</div>
-<% include ../layout/footer %>
+{% endblock %}

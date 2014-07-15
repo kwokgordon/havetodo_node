@@ -7,31 +7,42 @@ var Tasklist = require(path.join(__basedir, 'models/tasklist'));
 module.exports = function APIRoutes(app, db, passport) {
 	
 	////////////////////////////////////////////////////////////////////////
-	app.get('/users', isLoggedIn, function(req, res) {
+	app.get('/api/users', isLoggedIn, function(req, res) {
 		var user = req.user;
 		
 		Task.find({_id: { $in: user.tasks}}, null, {sort:{completed:'asc', name:'asc'}}, function(err, tasks) {
 			if (err)
 				res.send(err);
 			
-			res.json(tasks);
+			return res.json({tasks : tasks});
 		});
 	});
 	
 	////////////////////////////////////////////////////////////////////////
-	app.get('/users/tasklists', isLoggedIn, function(req, res) {
+	app.get('/api/users/tasklists', isLoggedIn, function(req, res) {
 		var user = req.user;
 		
-		Tasklist.find({_id: { $in: user.tasklists}}, null, {sort:{name:'asc'}}, function(err, tasklists) {
+		var o = {};
+		o.map = function () { emit(this.name, 1); };
+		o.reduce = function (k, v) { return Array.sum(v); };
+
+		Tasklist.mapReduce(o, function(err, results) {
 			if (err)
 				res.send(err);
-	
-			res.json(tasklists);
+				
+			console.log(results);
+			
+			Tasklist.find({_id: { $in: user.tasklists}}, null, {sort:{name:'asc'}}, function(err, tasklists) {
+				if (err)
+					res.send(err);
+		
+				return res.json({tasklists : tasklists});
+			});
 		});
 	});
 	
 	////////////////////////////////////////////////////////////////////////
-	app.post('/users/tasklists', isLoggedIn, function(req, res) {
+	app.post('/api/users/tasklists', isLoggedIn, function(req, res) {
 		var user = req.user;
 	
 		Tasklist.create({
@@ -54,7 +65,7 @@ module.exports = function APIRoutes(app, db, passport) {
 						if (err)
 							res.send(err);
 	
-						res.json(tasklists);
+						return res.json({tasklists : tasklists});
 					});
 				});
 			});
@@ -62,7 +73,7 @@ module.exports = function APIRoutes(app, db, passport) {
 	});
 	
 	////////////////////////////////////////////////////////////////////////
-	app.delete('/users/tasklists/:_id', isLoggedIn, function(req, res) {
+	app.delete('/api/users/tasklists/:_id', isLoggedIn, function(req, res) {
 		var user = req.user;
 	
 		Tasklist.remove({
@@ -84,27 +95,52 @@ module.exports = function APIRoutes(app, db, passport) {
 						if (err)
 							res.send(err);
 							
-						res.json(tasklists);
+						return res.json({tasklists : tasklists});
 					});
 				});
 			});
 		});
 	});
+
+	////////////////////////////////////////////////////////////////////////
+	app.get('/api/users/tasklists/:tasklist_id', isLoggedIn, function(req, res) {
+		var user = req.user;
+
+		User.findById(user._id, function(err, user) {
+			if (err)
+				res.send(err);
+			
+			if(user.tasklists.indexOf(req.params.tasklist_id) == -1)
+				return res.json({success:false, error: ["You don't have access to this tasklist."]});
+				
+			Tasklist.findById(req.params.tasklist_id, function (err, tasklist) {
+				if (err)
+					res.send(err);
+				
+				Task.find({_id: { $in: tasklist.tasks}}, null, {sort:{completed:'asc', name:'asc'}}, function(err, tasks) {
+					if (err)
+						res.send(err);
+						
+					return res.json({success: true, tasklist: tasklist._id, taskTitle: tasklist.name, tasks: tasks});
+				});		
+			});
+		});		
+	});
 	
 	////////////////////////////////////////////////////////////////////////
-	app.get('/users/tasks', isLoggedIn, function(req, res) {
+	app.get('/api/users/tasks', isLoggedIn, function(req, res) {
 		var user = req.user;
 		
 		Task.find({_id: { $in: user.tasks}}, null, {sort:{completed:'asc', name:'asc'}}, function(err, tasks) {
 			if (err)
 				res.send(err);
 			
-			res.json(tasks);
+			return res.json({tasklist: "all", taskTitle: "All Tasks", tasks : tasks});
 		});
 	});
 	
 	////////////////////////////////////////////////////////////////////////
-	app.post('/users/tasks', isLoggedIn, function(req, res) {
+	app.post('/api/users/tasks/:tasklist_id', isLoggedIn, function(req, res) {
 		var user = req.user;
 	
 		Task.create({
@@ -116,7 +152,23 @@ module.exports = function APIRoutes(app, db, passport) {
 			User.findById(req.user._id, function(err, user) {
 				if (err)
 					res.send(err);
-					
+									
+				if(req.params.tasklist_id != "all") {
+					if(user.tasklists.indexOf(req.params.tasklist_id) == -1)
+						return res.json({success:false, error: ["You don't have access to this tasklist."]});
+
+					Tasklist.findById(req.params.tasklist_id, function (err, tasklist) {
+						if (err)
+							res.send(err);
+						
+						tasklist.tasks.push(task._id);
+						tasklist.save(function(err) {
+							if (err)
+								res.send(err);
+						});
+					});
+				}
+
 				user.tasks.push(task._id);
 				user.save(function(err) {
 					if (err)
@@ -126,7 +178,7 @@ module.exports = function APIRoutes(app, db, passport) {
 						if (err)
 							res.send(err);
 	
-						res.json(tasks);
+						return res.json({success: true, tasks : tasks});
 					});
 				});
 			});
@@ -134,7 +186,7 @@ module.exports = function APIRoutes(app, db, passport) {
 	});
 	
 	////////////////////////////////////////////////////////////////////////
-	app.delete('/users/tasks/:_id', isLoggedIn, function(req, res) {
+	app.delete('/api/users/tasks/:_id', isLoggedIn, function(req, res) {
 		var user = req.user;
 	
 		Task.remove({
@@ -147,7 +199,7 @@ module.exports = function APIRoutes(app, db, passport) {
 				if (err)
 					res.send(err);
 					
-				user.tasks.splice(user.tasks.indexOf(task._id), 1);
+				user.tasks.splice(user.tasks.indexOf(req.params._id), 1);
 				user.save(function(err) {
 					if (err)
 						res.send(err);
@@ -156,7 +208,7 @@ module.exports = function APIRoutes(app, db, passport) {
 						if (err)
 							res.send(err);
 							
-						res.json(tasks);
+						return res.json({tasks : tasks});
 					});
 				});
 			});
@@ -164,7 +216,7 @@ module.exports = function APIRoutes(app, db, passport) {
 	});
 	
 	////////////////////////////////////////////////////////////////////////
-	app.post('/users/tasks/togglecomplete/:_id', isLoggedIn, function(req, res) {
+	app.post('/api/users/tasks/togglecomplete/:_id', isLoggedIn, function(req, res) {
 		var user = req.user;
 	
 		Task.findOne({
@@ -196,7 +248,7 @@ module.exports = function APIRoutes(app, db, passport) {
 					if (err)
 						res.send(err);
 						
-					res.json(tasks);
+					return res.json({tasks : tasks});
 				});
 			});
 		});

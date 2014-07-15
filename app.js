@@ -12,6 +12,7 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 var flash = require('connect-flash');
 var cons = require('consolidate');
+var swig = require('swig');
 
 var app = express();
 
@@ -40,6 +41,8 @@ MongoClient.connect(configDB.url, function(err, db) {
 	app.engine('html', cons.swig);
 	app.set('view engine', 'html');
 	app.set('views', path.join(__basedir, 'views'));
+	app.set('view cache', app.get('env') === 'production');
+	swig.setDefaults({cache : app.get('env') === 'production'});
 
 	app.use(favicon(path.join(__basedir, 'public/images/favicon.ico')));
 	app.use(logger('dev'));
@@ -72,9 +75,9 @@ MongoClient.connect(configDB.url, function(err, db) {
 	var APIRoutes = require(path.join(__basedir, 'controllers/api'));
 	var api_routes = new APIRoutes(app, db, passport);
 
-	app.use('/', main_routes);
-	app.use('/users', task_routes);
-	app.use('/api', api_routes);
+//	app.use('/', main_routes);
+//	app.use('/users', task_routes);
+//	app.use('/api', api_routes);
 
 	/////////////////////////////////////////////////////////////////////////////
 

@@ -1,13 +1,14 @@
 var path = require('path');
+var User = require(path.join(__basedir, 'models/user'));
+var Task = require(path.join(__basedir, 'models/task'));
+var Tasklist = require(path.join(__basedir, 'models/tasklist'));
+
+var configAuth = require(path.join(__basedir, 'config/auth.js'));
 
 var LocalStrategy = require('passport-local').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
 
-var User = require(path.join(__basedir, 'models/user.js'));
-
-var configAuth = require(path.join(__basedir, 'config/auth.js'));
-
-module.exports = function(passport) {
+module.exports = function PassportAuth(passport) {
 
 	passport.serializeUser( function(user, done) {
 		done(null, user.id);

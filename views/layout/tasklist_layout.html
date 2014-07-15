@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{% block title %}HaveTodo{% endblock %}</title>
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular-resource.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular-route.min.js"></script>
+
+	<link rel="stylesheet" href="/stylesheets/style.css">
+	<script src="/javascripts/angular.js"></script>
+
+	<link rel="stylesheet" href="/stylesheets/tasks.css">
+	<script src="/javascripts/tasks.js"></script>
+
+	{%block head %}
+	{% endblock %}
+
+</head>
+<body>
+	<nav class="navbar-inverse" role="navigation">
+		<div class="navbar-header">
+			<a id="logo" class="navbar-brand" href="/">HaveTodo</a>
+		</div>
+
+		<div class="collapse navbar-collapse">
+			<ul class="nav navbar-nav navbar-right">
+			{% if (login) %}
+				<li id="fat-menu" class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+						{{ user.name }} <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li><a href="/users/profile">Profile</a></li>
+						<li><a href="/users/tasks">Tasks</a></li>
+						<li><a href="#">Friends</a></li>
+						<li><a href="#">Settings</a></li>
+						<li class="divider"></li>
+						<li><a href="/logout">Log out</a></li>
+					</ul>
+				</li>
+			{% else %}
+				<li><a href="/">Home</a></li>
+				<li><a href="#">Help</a></li>
+				<li><a href="/login">Sign in</a></li>
+			{% endif %}
+			</ul>
+		</div>
+	</nav>
+		
+{#
+	{% if (message.length > 0) %}
+		<div class="container">
+			<ul class="alert alert-success">
+				{% for m in message -%}
+					<li>{{ m }}</li>
+				{%- endfor %}
+			</ul>
+		</div>
+	{% endif %}
+
+	{% if (error.length > 0) %}
+		<div class="container">
+			<ul class="alert alert-danger">
+				{% for m in error -%}
+					<li>{{ m }}</li>
+				{%- endfor %}
+			</ul>
+		</div>
+	{% endif %}
+
+		<div class="container" ng-if="message">
+			<ul class="alert alert-success">
+				<li ng-repeat="m in message">[[ m ]]</li>
+			</ul>
+		</div>
+
+		<div class="container" ng-if="error">
+			<ul class="alert alert-danger">
+				<li ng-repeat="m in error">[[ m ]]</li>
+			</ul>
+		</div>
+#}
+	<div ng-app="havetodoApp">
+		<div ng-controller="TasksController">
+			<div class="well sidebar">
+			  <ul style="list-style-type: none;">
+			    <li>
+			      <a href="/users/tasks">All Tasks <span class="badge">[[tasks.length]]</span></a>
+			    </li>
+			  </ul>
+			  
+			  <hr>
+			
+			  <ul style="list-style-type: none;">
+			    <li>Tasklists</li>
+			    	 <li ng-repeat="tasklist in tasklists">
+			      	<div class="circle" style="background-color: [[tasklist.color]]" ></div>
+			      	<a href="#" ng-click="tasklists_tasks(tasklist._id)">[[tasklist.name]]</a>
+			   	  </li>
+			    <li><a id="CreateTasklist" href="#" data-toggle="modal" data-target="#CreateTasklistModal">Create Tasklist</a></li>
+			  </ul>
+			
+				<!-- Modal -->
+				<div class="modal fade" id="CreateTasklistModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+				  <div class="modal-dialog">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				        <h4 class="modal-title" id="myModalLabel">Create TaskList</h4>
+				      </div>
+								<form name="AddTasklistForm">
+				      <div class="modal-body">
+								<div class="field">
+									<label>Name</label>
+									<input type="text" ng-model="formData.name" autofocus required>
+								</div>
+								<div class="field">
+									<label>Color</label>
+									<input id="tasklist_color" type="color" ng-model="formData.color">
+								</div>
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+								<button type="submit" class="btn btn-primary" ng-click="createTasklist()" ng-disabled="!AddTasklistForm.$valid">Add</button>
+				      </div>
+								</form>
+				    </div>
+				  </div>
+				</div>
+			</div>
+
+			{% block content %}{% endblock %}
+		</div>
+	</div>
+
+	<footer class="footer">
+		<small>HaveTodo by Gordon Kwok</small>
+		<ul>
+			<li><a href="#">About</a></li>
+			<li><a href="#">Contact</a></li>
+		</ul>
+	</footer>
+</body>
+</html>
