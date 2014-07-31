@@ -22,22 +22,11 @@ module.exports = function APIRoutes(app, db, passport) {
 	app.get('/api/users/tasklists', isLoggedIn, function(req, res) {
 		var user = req.user;
 		
-		var o = {};
-		o.map = function () { emit(this.name, 1); };
-		o.reduce = function (k, v) { return Array.sum(v); };
-
-		Tasklist.mapReduce(o, function(err, results) {
+		Tasklist.find({_id: { $in: user.tasklists}}, null, {sort:{name:'asc'}}, function(err, tasklists) {
 			if (err)
 				res.send(err);
-				
-			console.log(results);
-			
-			Tasklist.find({_id: { $in: user.tasklists}}, null, {sort:{name:'asc'}}, function(err, tasklists) {
-				if (err)
-					res.send(err);
-		
-				return res.json({tasklists : tasklists});
-			});
+	
+			return res.json({tasklists : tasklists});
 		});
 	});
 	
@@ -257,12 +246,10 @@ module.exports = function APIRoutes(app, db, passport) {
 		
 	////////////////////////////////////////////////////////////////////////
 	function isLoggedIn(req, res, next) {
-		
-		if (req.isAuthenticated())
-	//	if (req.user)
+		if (req.user)
 			return next();
-			
-		res.redirect('/');
+
+		res.redirect('/login');
 	}
 
 };

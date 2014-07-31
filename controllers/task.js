@@ -29,11 +29,9 @@ module.exports = function TaskRoutes(app, db, passport) {
 	});
 	
 	function isLoggedIn(req, res, next) {
-		
-		if (req.isAuthenticated())
-	//	if (req.user)
+		if (req.user)
 			return next();
-			
-		res.redirect('/');
+
+		res.redirect('/login');
 	}
 };

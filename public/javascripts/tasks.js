@@ -26,6 +26,15 @@ havetodoApp.controller('TasksController', function ($scope, $http) {
 
 ////////////////////////////////////////////////////////////////////////
 // Tasklist
+	$scope.createTasklistModal = function() {
+ 	  $scope.formData.color = getRandomColor();
+		$('#CreateTasklistModal')
+			.modal('show')
+			.on('shown.bs.modal', function () {
+		    $(this).find("[autofocus]:first").focus();
+			});
+	};
+
 	$scope.createTasklist = function() {
 		if($scope.formData.name == undefined || $scope.formData.name.trim() == "")
 			return;

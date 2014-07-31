@@ -50,45 +50,13 @@
 		</div>
 	</nav>
 		
-{#
-	{% if (message.length > 0) %}
-		<div class="container">
-			<ul class="alert alert-success">
-				{% for m in message -%}
-					<li>{{ m }}</li>
-				{%- endfor %}
-			</ul>
-		</div>
-	{% endif %}
-
-	{% if (error.length > 0) %}
-		<div class="container">
-			<ul class="alert alert-danger">
-				{% for m in error -%}
-					<li>{{ m }}</li>
-				{%- endfor %}
-			</ul>
-		</div>
-	{% endif %}
-
-		<div class="container" ng-if="message">
-			<ul class="alert alert-success">
-				<li ng-repeat="m in message">[[ m ]]</li>
-			</ul>
-		</div>
-
-		<div class="container" ng-if="error">
-			<ul class="alert alert-danger">
-				<li ng-repeat="m in error">[[ m ]]</li>
-			</ul>
-		</div>
-#}
 	<div ng-app="havetodoApp">
 		<div ng-controller="TasksController">
 			<div class="well sidebar">
 			  <ul style="list-style-type: none;">
 			    <li>
-			      <a href="/users/tasks">All Tasks <span class="badge">[[tasks.length]]</span></a>
+			      <a href="/users/tasks">All Tasks
+			      	{# <span class="badge">[[tasks.length]]</span> #}</a>
 			    </li>
 			  </ul>
 			  
@@ -100,7 +68,7 @@
 			      	<div class="circle" style="background-color: [[tasklist.color]]" ></div>
 			      	<a href="#" ng-click="tasklists_tasks(tasklist._id)">[[tasklist.name]]</a>
 			   	  </li>
-			    <li><a id="CreateTasklist" href="#" data-toggle="modal" data-target="#CreateTasklistModal">Create Tasklist</a></li>
+			    <li><a id="CreateTasklist" href="#" ng-click="createTasklistModal()">Create Tasklist</a></li>
 			  </ul>
 			
 				<!-- Modal -->

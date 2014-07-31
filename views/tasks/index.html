@@ -30,6 +30,7 @@
 			  <table class="table">
 		      <tr ng-repeat="task in tasks" class="task-completed-[[task.completed]]">
 		      	<td width="5%">
+	            <div class="circle" style="background-color:[[task.color]]"></div>
 		      		<div ng-if="task.completed">
 			      	  <img src="/images/check.png" height="50px" width="50px" ng-click="toggleComplete(task._id)">
 			      	</div>

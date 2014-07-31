@@ -47,40 +47,6 @@
 		</div>
 	</nav>
 		
-{#
-	{% if (message.length > 0) %}
-		<div class="container">
-			<ul class="alert alert-success">
-				{% for m in message -%}
-					<li>{{ m }}</li>
-				{%- endfor %}
-			</ul>
-		</div>
-	{% endif %}
-
-	{% if (error.length > 0) %}
-		<div class="container">
-			<ul class="alert alert-danger">
-				{% for m in error -%}
-					<li>{{ m }}</li>
-				{%- endfor %}
-			</ul>
-		</div>
-	{% endif %}
-
-		<div class="container" ng-if="message">
-			<ul class="alert alert-success">
-				<li ng-repeat="m in message">[[ m ]]</li>
-			</ul>
-		</div>
-
-		<div class="container" ng-if="error">
-			<ul class="alert alert-danger">
-				<li ng-repeat="m in error">[[ m ]]</li>
-			</ul>
-		</div>
-#}
-
 	<div ng-app="havetodoApp">
 		{% block content %}{% endblock %}
 	</div>
