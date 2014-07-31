@@ -7,6 +7,18 @@ var Tasklist = require(path.join(__basedir, 'models/tasklist'));
 module.exports = function APIRoutes(app, db, passport) {
 	
 	////////////////////////////////////////////////////////////////////////
+	app.get('/api/test', function(req, res) {
+		
+		Task.find(null, null, {sort:{completed:'asc', name:'asc'}}, function(err, tasks) {
+			if (err)
+				res.send(err);
+			
+			return res.json({taskTitle: "All Tasks", tasks : tasks});
+		});
+	});
+
+
+	////////////////////////////////////////////////////////////////////////
 	app.get('/api/users', isLoggedIn, function(req, res) {
 		var user = req.user;
 		
